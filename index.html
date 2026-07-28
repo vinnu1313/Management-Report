@@ -5054,6 +5054,9 @@ window.addEventListener(&#39;resize&#39;,syncStickyOffsets);
     if(!reports.length){ setHint('Select at least one period and section for the chosen report.'); return; }
 
     var clone = document.documentElement.cloneNode(true);
+    // The dialog is open at clone time; an exported copy must not carry it.
+    var cloneOverlay = clone.querySelector('#x-overlay');
+    if(cloneOverlay && cloneOverlay.parentNode) cloneOverlay.parentNode.removeChild(cloneOverlay);
     // Point each included frame at a config-injected copy; drop the rest.
     ['monthly','biweekly'].forEach(function(r){
       var cf = clone.querySelector('#frame-' + r);
@@ -5092,16 +5095,18 @@ window.addEventListener(&#39;resize&#39;,syncStickyOffsets);
   function openExport(){
     setHint('');
     buildModalBody();
-    document.getElementById('x-overlay').style.display = 'flex';
+    var ov = document.getElementById('x-overlay'); if(ov) ov.style.display = 'flex';
   }
-  function closeExport(){ document.getElementById('x-overlay').style.display = 'none'; }
+  function closeExport(){ var ov = document.getElementById('x-overlay'); if(ov) ov.style.display = 'none'; }
   window.__openExport = openExport;
 
-  document.getElementById('x-close').addEventListener('click', closeExport);
-  document.getElementById('x-cancel').addEventListener('click', closeExport);
-  document.getElementById('x-overlay').addEventListener('click', function(e){ if(e.target === document.getElementById('x-overlay')) closeExport(); });
-  document.getElementById('x-open').addEventListener('click', function(){ runExport('open'); });
-  document.getElementById('x-download').addEventListener('click', function(){ runExport('download'); });
+  // Exported copies have no dialog, so bind defensively.
+  function onClick(id, fn){ var el = document.getElementById(id); if(el) el.addEventListener('click', fn); }
+  onClick('x-close', closeExport);
+  onClick('x-cancel', closeExport);
+  onClick('x-overlay', function(e){ if(e.target === document.getElementById('x-overlay')) closeExport(); });
+  onClick('x-open', function(){ runExport('open'); });
+  onClick('x-download', function(){ runExport('download'); });
 })();
 
 </script>
