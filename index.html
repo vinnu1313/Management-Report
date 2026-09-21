@@ -4610,22 +4610,25 @@ function i2eTable(rowsIn, entityLabel){
   var n  = function(v){ return fmt.num(v, 0); };
   var pc = function(v){ return fmt.pct(v); };
   var gross = function(a){ return a.internal + a.i2e; };
+  var ext = function(a){ return a.total - a.internal; };
+  var completed = function(a){ return gross(a) + ext(a); };
   var h = '<div class="table-wrap i2e-table"><table class="data">'
     + '<thead><tr><th>' + (entityLabel || 'Work orders') + '</th>'
     + all.map(function(c){ return '<th>' + ((entityLabel === 'By market' && c[0] !== 'Total' && state.view !== 'market') ? '<span data-goto-market="' + c[0] + '">' + c[0] + '</span>' : c[0]) + '</th>'; }).join('') + '</tr></thead><tbody>'
-    + row('# of WO Completed', function(a){ return n(a.total); })
+    + row('# of WO Completed', function(a){ return n(completed(a)); })
     + row('Internal', function(a){ return n(gross(a)); })
-    + row('External', function(a){ return n(a.total - gross(a)); })
-    + row('% of Internal', function(a){ return a.total ? pc(gross(a)/a.total) : '\u2014'; })
-    + row('% of External', function(a){ return a.total ? pc((a.total-gross(a))/a.total) : '\u2014'; })
+    + row('External', function(a){ return n(ext(a)); })
+    + row('% of Internal', function(a){ return completed(a) ? pc(gross(a)/completed(a)) : '\u2014'; })
+    + row('% of External', function(a){ return completed(a) ? pc(ext(a)/completed(a)) : '\u2014'; })
     + row('Internal Transition to External', function(a){ return n(a.i2e); }, 'spacer-above')
-    + row('Internal Transition to External %', function(a){ return a.total ? pc(a.i2e/a.total) : '\u2014'; })
+    + row('Internal Transition to External %', function(a){ return completed(a) ? pc(a.i2e/completed(a)) : '\u2014'; })
     + row('Adjusted Internal Rate', function(a){ return a.total ? pc(a.internal/a.total) : '\u2014'; }, 'total')
     + row('Adjusted External Rate', function(a){ return a.total ? pc((a.total-a.internal)/a.total) : '\u2014'; }, 'total')
     + '</tbody></table>'
     + '<div class="market-footnote">Internal includes work orders a technician started and then '
-    + 'transitioned to an external vendor. The adjusted rate removes those and matches the '
-    + 'internalization figure shown above.</div></div>';
+    + 'transitioned to an external vendor, so WO Completed here counts those twice and runs '
+    + 'above the total shown elsewhere. The adjusted rates remove the transitions and match '
+    + 'the internalization figure above.</div></div>';
   return h;
 }
 
@@ -5569,22 +5572,25 @@ function i2eTable(rowsIn, entityLabel){
   var n  = function(v){ return fmt.num(v, 0); };
   var pc = function(v){ return fmt.pct(v); };
   var gross = function(a){ return a.internal + a.i2e; };
+  var ext = function(a){ return a.total - a.internal; };
+  var completed = function(a){ return gross(a) + ext(a); };
   var h = '<div class="table-wrap i2e-table"><table class="data">'
     + '<thead><tr><th>' + (entityLabel || 'Work orders') + '</th>'
     + all.map(function(c){ return '<th>' + ((entityLabel === 'By market' && c[0] !== 'Total' && state.view !== 'market') ? '<span data-goto-market="' + c[0] + '">' + c[0] + '</span>' : c[0]) + '</th>'; }).join('') + '</tr></thead><tbody>'
-    + row('# of WO Completed', function(a){ return n(a.total); })
+    + row('# of WO Completed', function(a){ return n(completed(a)); })
     + row('Internal', function(a){ return n(gross(a)); })
-    + row('External', function(a){ return n(a.total - gross(a)); })
-    + row('% of Internal', function(a){ return a.total ? pc(gross(a)/a.total) : '\u2014'; })
-    + row('% of External', function(a){ return a.total ? pc((a.total-gross(a))/a.total) : '\u2014'; })
+    + row('External', function(a){ return n(ext(a)); })
+    + row('% of Internal', function(a){ return completed(a) ? pc(gross(a)/completed(a)) : '\u2014'; })
+    + row('% of External', function(a){ return completed(a) ? pc(ext(a)/completed(a)) : '\u2014'; })
     + row('Internal Transition to External', function(a){ return n(a.i2e); }, 'spacer-above')
-    + row('Internal Transition to External %', function(a){ return a.total ? pc(a.i2e/a.total) : '\u2014'; })
+    + row('Internal Transition to External %', function(a){ return completed(a) ? pc(a.i2e/completed(a)) : '\u2014'; })
     + row('Adjusted Internal Rate', function(a){ return a.total ? pc(a.internal/a.total) : '\u2014'; }, 'total')
     + row('Adjusted External Rate', function(a){ return a.total ? pc((a.total-a.internal)/a.total) : '\u2014'; }, 'total')
     + '</tbody></table>'
     + '<div class="market-footnote">Internal includes work orders a technician started and then '
-    + 'transitioned to an external vendor. The adjusted rate removes those and matches the '
-    + 'internalization figure shown above.</div></div>';
+    + 'transitioned to an external vendor, so WO Completed here counts those twice and runs '
+    + 'above the total shown elsewhere. The adjusted rates remove the transitions and match '
+    + 'the internalization figure above.</div></div>';
   return h;
 }
 
@@ -6358,22 +6364,25 @@ function i2eTable(rowsIn, entityLabel){
   var n  = function(v){ return fmt.num(v, 0); };
   var pc = function(v){ return fmt.pct(v); };
   var gross = function(a){ return a.internal + a.i2e; };
+  var ext = function(a){ return a.total - a.internal; };
+  var completed = function(a){ return gross(a) + ext(a); };
   var h = '<div class="table-wrap i2e-table"><table class="data">'
     + '<thead><tr><th>' + (entityLabel || 'Work orders') + '</th>'
     + all.map(function(c){ return '<th>' + ((entityLabel === 'By market' && c[0] !== 'Total' && state.view !== 'market') ? '<span data-goto-market="' + c[0] + '">' + c[0] + '</span>' : c[0]) + '</th>'; }).join('') + '</tr></thead><tbody>'
-    + row('# of WO Completed', function(a){ return n(a.total); })
+    + row('# of WO Completed', function(a){ return n(completed(a)); })
     + row('Internal', function(a){ return n(gross(a)); })
-    + row('External', function(a){ return n(a.total - gross(a)); })
-    + row('% of Internal', function(a){ return a.total ? pc(gross(a)/a.total) : '\u2014'; })
-    + row('% of External', function(a){ return a.total ? pc((a.total-gross(a))/a.total) : '\u2014'; })
+    + row('External', function(a){ return n(ext(a)); })
+    + row('% of Internal', function(a){ return completed(a) ? pc(gross(a)/completed(a)) : '\u2014'; })
+    + row('% of External', function(a){ return completed(a) ? pc(ext(a)/completed(a)) : '\u2014'; })
     + row('Internal Transition to External', function(a){ return n(a.i2e); }, 'spacer-above')
-    + row('Internal Transition to External %', function(a){ return a.total ? pc(a.i2e/a.total) : '\u2014'; })
+    + row('Internal Transition to External %', function(a){ return completed(a) ? pc(a.i2e/completed(a)) : '\u2014'; })
     + row('Adjusted Internal Rate', function(a){ return a.total ? pc(a.internal/a.total) : '\u2014'; }, 'total')
     + row('Adjusted External Rate', function(a){ return a.total ? pc((a.total-a.internal)/a.total) : '\u2014'; }, 'total')
     + '</tbody></table>'
     + '<div class="market-footnote">Internal includes work orders a technician started and then '
-    + 'transitioned to an external vendor. The adjusted rate removes those and matches the '
-    + 'internalization figure shown above.</div></div>';
+    + 'transitioned to an external vendor, so WO Completed here counts those twice and runs '
+    + 'above the total shown elsewhere. The adjusted rates remove the transitions and match '
+    + 'the internalization figure above.</div></div>';
   return h;
 }
 function teardownFR(){ if(_frMap){try{_frMap.remove();}catch(e){} _frMap=null;_frLayer=null;} _frState=null; const f=document.getElementById('fr-float'); if(f)f.style.display='none'; }
@@ -6847,45 +6856,50 @@ function reviewsSection(num){
 }
 function internSection(num){
   return '<section class="section">'+secHead(num,'Internalization','Internal WO as % of total work orders')
-    + '<div class="split"><div class="chart-container">'
-    + '<div class="chart-title">Internalization \u00b7 weekly trend</div>'
+    + '<div class="chart-container"><div class="chart-title">Internalization \u00b7 weekly trend</div>'
     + '<div id="w-c-intern"></div>'
     + '<div class="chart-legend"><span><span class="swatch actual"></span>Actual</span>'
     + '<span><span class="swatch budget"></span>Target</span></div></div>'
-    + '<div class="table-wrap"><table class="data"><thead><tr>'
-    + '<th>' + (state.view==='market' ? 'Fund' : 'Market') + '</th>'
-    + '<th>Internal</th><th>Total</th><th>%</th></tr></thead>'
-    + '<tbody id="w-intern-tbl"></tbody></table></div></div></section>';
+    + '<div class="table-wrap" style="margin-top:26px;"><table class="data">'
+    + '<thead id="w-funds-head"></thead><tbody id="w-funds-body"></tbody></table></div></section>';
 }
-// internal vs total by fund (market view) or by market (everywhere else)
+// Internal vs total by fund and market, matching the monthly and biweekly tables:
+// funds down the side, a Total group then one group per market across the top.
 function renderInternTable(root){
-  const body=qIn(root,'w-intern-tbl'); if(!body) return;
+  const head=qIn(root,'w-funds-head'), body=qIn(root,'w-funds-body');
+  if(!head||!body) return;
   const p=state.period;
-  let rows;
-  if(state.view==='market'){
-    rows=FDU.map(function(f){
-      const s0=(FM[state.market]||{})[f]; if(!s0) return null;
-      let a=0,t=0; PIDX(p).forEach(function(q){ a+=s0.internal[q]||0; t+=s0.total[q]||0; });
-      return t?{label:FDS[f]||f, link:'', a:a, t:t}:null;
-    }).filter(Boolean);
-  } else if(state.view==='jv'){
-    rows=MK.map(function(m){
-      const s0=(FM[m]||{})[state.jv]; if(!s0) return null;
-      let a=0,t=0; PIDX(p).forEach(function(q){ a+=s0.internal[q]||0; t+=s0.total[q]||0; });
-      return t?{label:m, link:gm(m), a:a, t:t}:null;
-    }).filter(Boolean);
-  } else {
-    rows=viewMarkets().map(function(m){
-      let a=0,t=0; PIDX(p).forEach(function(q){ a+=MM.internal[m][q]||0; t+=MM.total[m][q]||0; });
-      return t?{label:m, link:gm(m), a:a, t:t}:null;
-    }).filter(Boolean);
-  }
-  const ta=rows.reduce(function(s,r){return s+r.a;},0), tt=rows.reduce(function(s,r){return s+r.t;},0);
-  body.innerHTML=rows.map(function(r){
-    return '<tr><td '+(r.link||'')+'>'+r.label+'</td><td>'+fmt.num(r.a)+'</td><td>'+fmt.num(r.t)+'</td>'
-      +'<td>'+fmt.pct(r.t?r.a/r.t:0)+'</td></tr>';
-  }).join('') + (rows.length?('<tr class="total"><td>Total</td><td>'+fmt.num(ta)+'</td><td>'+fmt.num(tt)
-      +'</td><td>'+fmt.pct(tt?ta/tt:0)+'</td></tr>'):'');
+  const markets=(state.view==='market') ? [state.market] : viewMarkets();
+  const funds=(state.view==='jv') ? [state.jv] : FDU;
+  const grp=function(lab){ return '<th colspan="3" class="group">'+lab+'</th>'; };
+  const grpMk=function(mk){ return '<th colspan="3" class="group" '+gm(mk)+'>'+mk+'</th>'; };
+  const sub=function(rule){ return '<th'+(rule?' class="group"':'')+'>Int.</th><th>Tot.</th><th>%</th>'; };
+  head.innerHTML='<tr><th rowspan="2">Fund / Strategy</th>'+grp('Total')+markets.map(grpMk).join('')+'</tr>'
+    +'<tr>'+sub(false)+markets.map(function(){return sub(true);}).join('')+'</tr>';
+  const cell=function(i,t,rule){
+    return '<td'+(rule?' class="section-rule"':'')+'>'+fmt.num(i||0)+'</td>'
+      +'<td>'+fmt.num(t||0)+'</td><td>'+(t>0?fmt.pct(i/t):'\u2014')+'</td>';
+  };
+  const fv=function(mk,f,block){
+    const s0=(FM[mk]||{})[f]; if(!s0) return 0;
+    let n=0; PIDX(p).forEach(function(q){ n += (block==='i' ? (s0.internal[q]||0) : (s0.total[q]||0)); });
+    return n;
+  };
+  const rows=funds.map(function(f){
+    let ti=0, tt=0;
+    const per=markets.map(function(mk){
+      const i=fv(mk,f,'i'), t=fv(mk,f,'t'); ti+=i; tt+=t; return {i:i,t:t};
+    });
+    return '<tr><td>'+(FDS[f]||f)+'</td>'+cell(ti,tt,false)
+      +per.map(function(c){return cell(c.i,c.t,true);}).join('')+'</tr>';
+  }).join('');
+  let gi=0, gt=0;
+  const colTot=markets.map(function(mk){
+    let i=0,t=0; funds.forEach(function(f){ i+=fv(mk,f,'i'); t+=fv(mk,f,'t'); });
+    gi+=i; gt+=t; return {i:i,t:t};
+  });
+  body.innerHTML=rows+'<tr class="total"><td>Total</td>'+cell(gi,gt,false)
+    +colTot.map(function(c){return cell(c.i,c.t,true);}).join('')+'</tr>';
 }
 function daysSection(num){
   var chart = '<div class="chart-container"><div class="chart-title">Days to complete \u00b7 weekly trend</div>'
